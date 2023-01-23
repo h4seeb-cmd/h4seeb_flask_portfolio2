@@ -1,8 +1,11 @@
+
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 from datetime import datetime
+import random
+import string
 
-from model.users import User
+from model.userStuff import User
 
 user_api = Blueprint('user_api', __name__,
                    url_prefix='/api/users')
@@ -21,22 +24,26 @@ class UserAPI:
             name = body.get('name')
             if name is None or len(name) < 2:
                 return {'message': f'Name is missing, or is less than 2 characters'}, 210
+            #validate email
+            email = body.get('email')
+            if email is None or len(email) < 2:
+                return {'message': f'Email is missing, or is less than 2 characters'}, 210
             # validate uid
             uid = body.get('uid')
-            if uid is None or len(uid) < 2:
+            if uid is None:
                 return {'message': f'User ID is missing, or is less than 2 characters'}, 210
             # look for password and dob
-            password = body.get('password')
+            pwd = body.get('pwd')
             dob = body.get('dob')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, 
-                      uid=uid)
-            
+            uo = User(name=name, uid=uid, email=email, pwd=''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k=7)))
+        
             ''' Additional garbage error checking '''
             # set password if provided
-            if password is not None:
-                uo.set_password(password)
+            if pwd is not None:
+                pwd = pwd 
             # convert to date type
             if dob is not None:
                 try:
@@ -44,9 +51,8 @@ class UserAPI:
                 except:
                     return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 210
             
-            ''' #2: Key Code block to add user to database '''
-            # create user in database
-            user = uo.create()
+            ''' #2: Key Code block to add user to database ''' 
+            user = uo.CREATE()
             # success returns json of user
             if user:
                 return jsonify(user.read())
