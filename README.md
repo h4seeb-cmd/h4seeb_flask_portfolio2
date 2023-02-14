@@ -97,3 +97,6 @@ nix-shell ./env
 - Jinja2 variables usage is to isolate data and allow redefinitions of attributes in templates.  Observe "{% set variable = %}" syntax for definition and "{{ variable }}" for reference.
 - The base.html uses combination of Bootstrap grid styling and custom CSS styling.  Grid styling in observe with the "<Col-3>" markers.  A Bootstrap Grid has a width of 12, thus four "Col-3" markers could fit on a Grid row.
 - A key purpose of this project is to embed links to other content.  The "href=" definition embeds hyperlinks into the rendered HTML.  The base.html file shows usage of "href={{github}}", the "{{github}}" is a Jinja2 variable.  Jinja2 variables are pre-processed by Python, a variable swap with value, before being sent to the browser.
+
+## New location for dynamic data
+> An SQL database is an example of dynamic data.  SQLAlchemy 3.x and beyond stores database in the app’s instance folder.  The volumes subdirectory with in this folder is made to be consistent with Docker terminology.
